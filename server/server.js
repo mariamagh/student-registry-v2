@@ -121,6 +121,8 @@ app.get("/students", async (req, res) => {
     let studentsList = [];
 
     for (let i = 0; i < total; i++) {
+
+        await new Promise(resolve => setTimeout(resolve, 500));
         // On met un try/catch dans la boucle pour éviter qu'un étudiant buggé ne casse toute la liste
         try {
             const studentId = await contract.studentIds(i); 

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registry - Portail Unifié</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        /* --- STYLE GLOBAL --- */
+        :root { 
+            --bg-dark: #0f172a; --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1); --text: #e2e8f0; 
+            --accent: #8b5cf6; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; 
+        }
+        body { 
+            font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text); 
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            background: radial-gradient(circle at 10% 20%, rgb(30, 10, 60) 0%, rgb(15, 23, 42) 90%);
+        }
+
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 10s infinite ease-in-out; }
+        .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #3b82f6; bottom: 0; right: -50px; animation-delay: 2s; }
+        @keyframes float { 0% { transform: translate(0, 0); } 50% { transform: translate(20px, 30px); } 100% { transform: translate(0, 0); } }
+
+        .centered-container { max-width: 900px; width: 100%; text-align: center; padding: 20px; }
+        .main-wrapper { max-width: 1200px; width: 100%; padding: 20px; display: none; } 
+
+        .hover-shine { transition: all 0.3s ease; border: 1px solid var(--glass-border); }
+        .hover-shine:hover { border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); }
+
+        .card { 
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 24px; 
+            padding: 30px; margin-bottom: 20px; 
+        }
+
+        h1 { margin: 0 0 10px 0; color: white; }
+        h2 { margin-top: 0; color: white; font-size: 18px; }
+
+        /* ALERT BOX METAMASK */
+        .inline-alert { 
+            margin-top: 20px; padding: 15px; 
+            background: rgba(239, 68, 68, 0.1); 
+            border: 1px solid var(--danger); 
+            border-radius: 12px; color: #fca5a5; 
+            font-size: 14px; display: none; text-align: center; 
+        }
+        .inline-alert a { color: white; text-decoration: underline; font-weight: bold; }
+
+        /* BOUTONS */
+        .btn-big { width: 100%; padding: 20px; font-size: 18px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; transition: 0.3s; }
+        .btn-big:hover { background: var(--accent); border-color: var(--accent); }
+        
+        .btn-primary { width: 100%; background: var(--accent); color: white; padding: 15px; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; }
+        .btn-back { background: transparent; border: 1px solid var(--glass-border); color: #94a3b8; padding: 8px 15px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 5px; }
+
+        /* INPUTS */
+        input { width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; color: white; margin-bottom: 12px; border: 1px solid var(--glass-border); box-sizing: border-box; }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        /* LISTE ETUDIANTS (ADMIN) */
+        .student-item { background: rgba(255, 255, 255, 0.03); border-radius: 12px; margin-bottom: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* PROFIL ETUDIANT (VUE) */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; text-align: left; }
+        .info-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; }
+        .label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 5px; }
+        .value { font-size: 16px; font-weight: 600; color: white; }
+
+        .upload-area { border: 2px dashed var(--glass-border); border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; margin-bottom: 20px; background: rgba(0,0,0,0.2); }
+        
+        .role-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .role-selector, .dashboard-grid, .info-grid { grid-template-columns: 1fr; } }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div id="landingSection" class="centered-container">
+        <div class="card hover-shine" style="padding: 50px;">
+            <i class="ri-government-line" style="font-size: 60px; color: var(--accent); margin-bottom: 20px; display: inline-block;"></i>
+            <h1 style="font-size: 32px; margin-bottom: 10px;">Portail Universitaire</h1>
+            <p style="color: #94a3b8; margin-bottom: 40px;">Sélectionnez votre espace de connexion.</p>
+
+            <div class="role-selector">
+                <button onclick="selectRole('ADMIN')" class="btn-big">
+                    <i class="ri-shield-user-line" style="font-size: 24px;"></i>
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">Administration</div>
+                        <div style="font-size: 12px; opacity: 0.7;">Gestion & Émission NFT</div>
+                    </div>
+                </button>
+
+                <button onclick="selectRole('STUDENT')" class="btn-big">
+                    <i class="ri-graduation-cap-line" style="font-size: 24px;"></i>
+                    <div style="text-align: left;">
+                        <div style="font-weight: bold;">Espace Étudiant</div>
+                        <div style="font-size: 12px; opacity: 0.7;">Consulter mon diplôme</div>
+                    </div>
+                </button>
+            </div>
+
+            <div id="installAlert" class="inline-alert">
+                <i class="ri-error-warning-line"></i> MetaMask n'est pas détecté.<br>
+                L'administration nécessite un portefeuille Web3.<br>
+                <a href="https://metamask.io/download/" target="_blank">Télécharger MetaMask 🦊</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminSection" class="main-wrapper">
+        <button onclick="goHome()" class="btn-back"><i class="ri-arrow-left-line"></i> Accueil</button>
+        
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+            <h2 style="margin:0;"><i class="ri-shield-star-line"></i> Dashboard Admin</h2>
+            <div id="adminWalletDisplay" style="font-family: monospace; color: var(--success); font-size: 14px;">Non connecté</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>📝 Inscrire & Certifier</h2>
+                <input type="number" id="admId" placeholder="ID Étudiant (ex: 101)" />
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="admFirst" placeholder="Prénom" />
+                    <input type="text" id="admLast" placeholder="Nom" />
+                </div>
+                
+                <div style="position: relative;">
+                    <i class="ri-wallet-3-line" style="position: absolute; right: 10px; top: 10px; color: #94a3b8;"></i>
+                    <input type="text" id="admWallet" placeholder="Adresse Wallet Étudiant (0x...)" style="border:1px solid var(--accent);"/>
+                </div>
+
+                <input type="text" id="admCourse" placeholder="Cours (ex: Blockchain)" />
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="admBirth" />
+                    <input type="number" id="admGrade" placeholder="Note / 20" />
+                </div>
+
+                <div class="upload-area hover-shine" id="uploadTrigger">
+                    <i class="ri-file-upload-line" style="font-size: 24px;"></i>
+                    <p id="fileName" style="margin: 5px 0 0; font-size: 12px; color: #94a3b8;">Choisir Diplôme</p>
+                    <input type="file" id="diplomaFile" style="display: none;" />
+                </div>
+
+                <button id="btnAdminAdd" class="btn-primary hover-shine">🚀 Envoyer le NFT</button>
+                <p id="adminStatus" style="font-size: 12px; text-align: center; margin-top: 10px; color: #94a3b8;"></p>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>👥 Base Étudiants (<span id="totalCount">0</span>)</h2>
+                    <button onclick="loadAdminList()" style="background:transparent; border:1px solid #ffffff33; color:white; border-radius:5px; cursor:pointer;"><i class="ri-refresh-line"></i></button>
+                </div>
+                <div id="adminListContainer">Chargement...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="studentLoginSection" class="centered-container" style="display: none;">
+        <button onclick="goHome()" class="btn-back" style="margin-right: auto;"><i class="ri-arrow-left-line"></i> Retour</button>
+        <div class="card" style="max-width: 400px; margin: 0 auto;">
+            <i class="ri-user-search-line" style="font-size: 40px; color: var(--accent); margin-bottom: 20px;"></i>
+            <h2>Accès Dossier</h2>
+            <p style="color: #94a3b8; margin-bottom: 20px;">Identifiez-vous pour voir votre certification.</p>
+            
+            <input type="text" id="stuLoginId" placeholder="Votre ID (ex: 101)" />
+            <input type="text" id="stuLoginName" placeholder="Votre Prénom" />
+            <input type="text" id="stuLoginLast" placeholder="Votre Nom" />
+            
+            <button onclick="studentLogin()" class="btn-primary">Consulter</button>
+            <p id="loginError" style="color: var(--danger); font-size: 13px; margin-top: 10px; display:none;"></p>
+        </div>
+    </div>
+
+    <div id="studentViewSection" class="centered-container" style="display: none; max-width: 800px;">
+        <button onclick="logoutStudent()" class="btn-back"><i class="ri-logout-box-line"></i> Déconnexion</button>
+        
+        <div class="card" style="text-align: left;">
+            <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class="ri-user-smile-line"></i></div>
+                <div>
+                    <h1 id="viewName" style="font-size: 24px; margin:0;">-</h1>
+                    <span id="viewId" style="color: var(--accent); font-family: monospace;">ID: -</span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box"><span class="label">Cursus</span><span class="value" id="viewCourse">-</span></div>
+                <div class="info-box"><span class="label">Note Finale</span><span class="value" id="viewGrade">-</span></div>
+                <div class="info-box"><span class="label">Date Naissance</span><span class="value" id="viewBirth">-</span></div>
+                <div class="info-box"><span class="label">Statut Blockchain</span><span class="value" id="viewStatus">-</span></div>
+            </div>
+
+            <h3 style="color: white; margin-bottom: 10px;">📜 Certificat Numérique</h3>
+            <div id="diplomaViewer" style="background: white; border-radius: 12px; height: 350px; display: flex; align-items: center; justify-content: center; color: black;">
+                Document non disponible
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+
+        // --- NAVIGATION & VÉRIFICATION WALLET ---
+        function goHome() {
+            document.querySelectorAll('body > div').forEach(div => {
+                if(div.className.includes('orb')) return;
+                div.style.display = 'none';
+            });
+            document.getElementById('landingSection').style.display = 'block';
+            document.getElementById('installAlert').style.display = 'none'; // Cacher alerte
+            document.body.style.justifyContent = "center";
+        }
+
+        async function selectRole(role) {
+            const alertBox = document.getElementById('installAlert');
+            alertBox.style.display = 'none';
+
+            if(role === 'ADMIN') {
+                // ICI: LA VÉRIFICATION QUE TU VOULAIS GARDER
+                if (typeof window.ethereum === 'undefined') {
+                    alertBox.style.display = 'block';
+                    return; // On arrête tout si pas de MetaMask
+                }
+
+                // Si OK, on connecte et on affiche le dashboard
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('landingSection').style.display = 'none';
+                    document.getElementById('adminSection').style.display = 'block';
+                    document.body.style.justifyContent = "flex-start";
+                    document.getElementById('adminWalletDisplay').innerText = "Connecté: " + accounts[0].substring(0,6) + "...";
+                    loadAdminList();
+                } catch(e) {
+                    alert("Connexion rejetée par l'utilisateur");
+                }
+            } 
+            else if (role === 'STUDENT') {
+                // Pas de vérification pour l'étudiant (Accès libre par ID)
+                document.getElementById('landingSection').style.display = 'none';
+                document.getElementById('studentLoginSection').style.display = 'block';
+                document.body.style.justifyContent = "center";
+            }
+        }
+
+        // UPLOAD UI
+        document.getElementById('uploadTrigger').addEventListener('click', () => document.getElementById('diplomaFile').click());
+        document.getElementById('diplomaFile').addEventListener('change', (e) => {
+            if(e.target.files.length > 0) document.getElementById('fileName').innerText = "✅ " + e.target.files[0].name;
+        });
+
+        // CHARGEMENT LISTE (ADMIN)
+        async function loadAdminList() {
+            try {
+                const res = await fetch(`${API_URL}/students`);
+                const data = await res.json();
+                document.getElementById('totalCount').innerText = data.length;
+                const container = document.getElementById('adminListContainer');
+                container.innerHTML = "";
+                data.forEach(s => {
+                    container.innerHTML += `
+                    <div class="student-item">
+                        <div>
+                            <b style="color:white;">${s.name}</b> <span style="font-size:12px; color:#94a3b8;">(#${s.id})</span>
+                            <div style="font-size:11px; color:var(--accent);">${s.course}</div>
+                        </div>
+                        <div style="font-size:12px;">${s.ipfsLink ? '✅ NFT Envoyé' : '⚠️ En attente'}</div>
+                    </div>`;
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        // AJOUT ETUDIANT (FONCTION QUE TU VEUX GARDER)
+        document.getElementById('btnAdminAdd').addEventListener('click', async () => {
+            const id = document.getElementById('admId').value;
+            const name = document.getElementById('admFirst').value + " " + document.getElementById('admLast').value;
+            const wallet = document.getElementById('admWallet').value; // Adresse Etudiant (Destination)
+            const course = document.getElementById('admCourse').value;
+            const birth = document.getElementById('admBirth').value;
+            const grade = document.getElementById('admGrade').value;
+            const file = document.getElementById('diplomaFile').files[0];
+            const status = document.getElementById('adminStatus');
+
+            if(!id || !name || !wallet || !file) { alert("Champs manquants !"); return; }
+
+            status.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Envoi en cours...";
+
+            try {
+                const formData = new FormData();
+                formData.append('id', id); formData.append('name', name);
+                formData.append('studentWallet', wallet); // Envoi au wallet de l'étudiant
+                formData.append('course', course); formData.append('birthDate', birth);
+                formData.append('grade', grade); formData.append('diploma', file);
+
+                const res = await fetch(`${API_URL}/add-student`, { method: 'POST', body: formData });
+                const result = await res.json();
+
+                if(result.success) {
+                    status.innerHTML = "✅ Succès ! NFT transféré à l'étudiant.";
+                    loadAdminList();
+                    document.getElementById('admId').value = ""; // Reset simple
+                } else {
+                    status.innerText = "❌ Erreur: " + JSON.stringify(result);
+                }
+            } catch(e) { status.innerText = "❌ Erreur Serveur"; }
+        });
+
+        // --- LOGIQUE ÉTUDIANT ---
+        async function studentLogin() {
+            const id = document.getElementById('stuLoginId').value.trim();
+            const first = document.getElementById('stuLoginName').value.trim();
+            const last = document.getElementById('stuLoginLast').value.trim();
+            const errorBox = document.getElementById('loginError');
+
+            if(!id || !first || !last) { errorBox.innerText = "Tout remplir svp."; errorBox.style.display="block"; return; }
+
+            errorBox.style.display="none";
+            
+            try {
+                const res = await fetch(`${API_URL}/students`);
+                const allStudents = await res.json();
+                
+                const fullName = `${first} ${last}`;
+                // Recherche insensible à la casse
+                const found = allStudents.find(s => s.id == id && s.name.toLowerCase() === fullName.toLowerCase());
+
+                if(found) {
+                    showStudentDashboard(found);
+                } else {
+                    errorBox.innerText = "Identifiants incorrects ou dossier inexistant.";
+                    errorBox.style.display="block";
+                }
+            } catch(e) { errorBox.innerText = "Erreur connexion serveur."; errorBox.style.display="block"; }
+        }
+
+        function showStudentDashboard(student) {
+            document.getElementById('studentLoginSection').style.display = 'none';
+            document.getElementById('studentViewSection').style.display = 'block';
+
+            document.getElementById('viewName').innerText = student.name;
+            document.getElementById('viewId').innerText = "ID #" + student.id;
+            document.getElementById('viewCourse').innerText = student.course;
+            document.getElementById('viewGrade').innerText = student.grade + "/20";
+            document.getElementById('viewBirth').innerText = student.birthDate;
+
+            const viewer = document.getElementById('diplomaViewer');
+            const status = document.getElementById('viewStatus');
+
+            if(student.ipfsLink) {
+                status.innerHTML = "<span style='color:#10b981'>✅ Certifié & NFT Transféré</span>";
+                viewer.innerHTML = `
+                    <iframe src="${student.ipfsLink}" style="width:100%; height:100%; border:none; border-radius:12px;"></iframe>
+                `;
+            } else {
+                status.innerHTML = "<span style='color:#f59e0b'>⏳ En attente de validation</span>";
+                viewer.innerHTML = "<p>Votre diplôme n'est pas encore disponible sur la Blockchain.</p>";
+            }
+        }
+
+        function logoutStudent() {
+            document.getElementById('stuLoginId').value = "";
+            document.getElementById('studentViewSection').style.display = 'none';
+            document.getElementById('studentLoginSection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
