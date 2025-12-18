@@ -26,4 +26,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: mariam730/Plateforme-de-Certification-Blockchain:latest
+          tags: mariam730/plateforme-de-certification-blockchain:latest
