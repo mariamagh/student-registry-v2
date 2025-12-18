@@ -6,7 +6,7 @@ const fs = require("fs");
 const axios = require("axios");
 const FormData = require("form-data");
 const path = require("path");
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: path.resolve(__dirname, '../.env') });
 
 // On charge l'artefact (ABI)
 const artifact = require("../artifacts/contracts/StudentRegistry.sol/StudentRegistry.json");
