@@ -19,41 +19,31 @@
             --success: #10b981; 
             --warning: #f59e0b; 
             --danger: #ef4444; 
-            --accent-glow: rgba(139, 92, 246, 0.5);
         }
         body { 
             font-family: 'Inter', system-ui, sans-serif; 
             background-color: var(--bg-dark); 
             color: var(--text); 
-            margin: 0; min-height: 100vh; 
+            margin: 0; min-height: 100vh; min-width: 100vw;
             display: flex; flex-direction: column; 
             align-items: center; justify-content: center;
             overflow-x: hidden;
             background: radial-gradient(circle at 10% 20%, rgb(30, 10, 60) 0%, rgb(15, 23, 42) 90%);
+            background-size: cover;
+            background-attachment: fixed;
         }
 
-        /* ORBES */
-        .orb { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 10s infinite ease-in-out; }
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6; animation: float 10s infinite ease-in-out; }
         .orb-1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: #3b82f6; bottom: 0; right: -50px; animation-delay: 2s; }
+        .orb-2 { width: 300px; height: 300px; background: #3b82f6; bottom: 0; right: 0; animation-delay: 2s; }
         @keyframes float { 0% { transform: translate(0, 0); } 50% { transform: translate(20px, 30px); } 100% { transform: translate(0, 0); } }
 
-        /* CONTAINERS */
         .centered-container { max-width: 450px; width: 100%; text-align: center; padding: 20px; }
         .main-wrapper { max-width: 1200px; width: 100%; padding: 20px; box-sizing: border-box; display: none; }
 
-        /* --- ✨ EFFET BRILLANCE (HOVER SHINE) --- */
-        .hover-shine {
-            transition: all 0.3s ease;
-            border: 1px solid var(--glass-border); 
-        }
-        .hover-shine:hover {
-            border-color: rgba(255, 255, 255, 0.8); 
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05); 
-            transform: translateY(-2px); 
-        }
+        .hover-shine { transition: all 0.3s ease; border: 1px solid var(--glass-border); }
+        .hover-shine:hover { border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); transform: translateY(-2px); }
 
-        /* CARD STYLE */
         .card { 
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -65,101 +55,131 @@
         h1 { margin: 0; font-weight: 700; color: white; margin-bottom: 10px; }
         h2 { font-size: 18px; margin-top: 0; margin-bottom: 20px; color: var(--text); }
 
-        /* ACCORDÉON (LISTE DÉROULANTE) */
-        .student-item {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            overflow: hidden;
+        /* INPUTS & BUTTONS */
+        input { width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; color: white; margin-bottom: 12px; box-sizing: border-box; border: 1px solid var(--glass-border); }
+        input:focus { border-color: var(--accent); outline: none; }
+        
+        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+            -webkit-text-fill-color: white !important;
         }
-        
-        .student-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .student-header h3 { margin: 0; font-size: 16px; color: white; }
-        .student-header span { font-size: 12px; color: var(--accent); font-family: monospace; }
-        
-        .student-details { display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--glass-border); margin-top: 10px; animation: slideDown 0.3s ease-out; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #94a3b8; }
-        .detail-row b { color: white; }
-        
-        /* BOUTONS & INPUTS */
-        .btn-choice { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: transparent; transition: all 0.2s ease; }
-        .btn-yes { border: 1px solid var(--success); color: var(--success); background: rgba(16, 185, 129, 0.05); }
-        .btn-no { border: 1px solid var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.05); }
-        
-        .btn-delete-confirm { border: 1px solid var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .btn-delete-confirm:hover { background: rgba(239, 68, 68, 0.2); box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .btn-choice { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; background: transparent; transition: all 0.2s ease; border: 1px solid var(--glass-border); color: white; }
+        .btn-choice:hover { background: rgba(255,255,255,0.05); }
 
         .btn-primary { width: 100%; background: var(--accent); color: white; padding: 16px; border-radius: 12px; font-weight: 700; border: none; margin-top: 10px; cursor: pointer; }
         .btn-icon { border:none; padding: 8px 12px; border-radius: 8px; font-size: 16px; margin-right: 5px; cursor: pointer; transition: 0.2s;}
         .btn-icon:hover { transform: scale(1.1); }
-        .action-buttons { display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end; }
 
-        input { width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 8px; color: white; margin-bottom: 12px; box-sizing: border-box; }
-        input:focus { border-color: var(--accent); outline: none; }
-        
-        /* CORRECTION FOND BLANC : Force le fond sombre même en AutoFill navigateur */
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover, 
-        input:-webkit-autofill:focus, 
-        input:-webkit-autofill:active{
-            /* CORRECTION: Couleur solide #1e293b au lieu de transparent pour masquer le blanc */
-            -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
-            -webkit-text-fill-color: white !important;
-            transition: background-color 5000s ease-in-out 0s;
-        }
+        /* LISTE */
+        .student-item { background: rgba(255, 255, 255, 0.03); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+        .student-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .student-details { display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--glass-border); margin-top: 10px; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #94a3b8; }
+        .detail-row b { color: white; }
 
+        /* UPLOAD & LAYOUT */
         .upload-area { border: 2px dashed var(--glass-border); border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; margin-bottom: 20px; background: rgba(0,0,0,0.2); }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 20px; background: var(--glass-bg); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid var(--glass-border); }
         .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
-        
-        .inline-alert { margin-top: 20px; padding: 15px; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 12px; color: #fca5a5; font-size: 14px; display: none; text-align: center; }
-        .inline-alert a { color: white; text-decoration: underline; font-weight: bold; }
-        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 20px; background: var(--glass-bg); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid var(--glass-border); }
+
+        /* PROFILS */
+        .student-profile-card { text-align: center; }
+        .profile-grade { font-size: 40px; font-weight: bold; margin: 20px 0; }
+        .profile-modules { text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+
         /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        
-        .modal-content { 
-            background: #1e293b; 
-            padding: 20px; 
-            border-radius: 16px; 
-            width: 700px; 
-            max-width: 90%; 
-            height: 80vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        .modal-content { background: #1e293b; padding: 20px; border-radius: 16px; width: 700px; height: 80vh; display: flex; flex-direction: column; border: 1px solid var(--glass-border); }
+        .modal-small { width: 400px; height: auto; text-align: center; }
+        iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 8px; flex-grow: 1; }
+
+        /* NOTIFICATIONS PERSONNALISÉES */
+        .custom-notification { 
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 16px;
+            padding: 20px 25px; min-width: 300px; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            display: flex; align-items: center; gap: 15px;
         }
-        
-        .modal-delete-content { 
-            background: rgba(30, 41, 59, 0.95); 
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notification-icon { font-size: 24px; }
+        .notification-content { flex: 1; }
+        .notification-title { font-weight: 600; margin-bottom: 5px; color: white; }
+        .notification-message { font-size: 14px; color: #94a3b8; }
+        .notification-success { border-left: 4px solid var(--success); }
+        .notification-error { border-left: 4px solid var(--danger); }
+        .notification-warning { border-left: 4px solid var(--warning); }
+        .notification-info { border-left: 4px solid #3b82f6; }
+
+        /* TIMER PROGRESS */
+        .timer-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
             border: 1px solid var(--glass-border);
-            padding: 30px; 
-            border-radius: 24px; 
-            width: 400px; 
-            max-width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .timer-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .timer-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .timer-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #3b82f6);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
-        /* Modal spécifique pour l'erreur de remplissage (Design comme delete) */
-        .modal-alert-content { 
-            background: rgba(30, 41, 59, 0.95); 
-            border: 1px solid var(--glass-border);
-            padding: 30px; 
-            border-radius: 24px; 
-            width: 400px; 
-            max-width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        /* MODAL D'ERREUR PERSONNALISÉ */
+        .error-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--danger);
+            border-radius: 16px;
+            padding: 30px;
+            min-width: 400px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            animation: modalSlideIn 0.3s ease-out;
         }
-
-        iframe { width: 100%; height: 100%; border: none; flex-grow: 1; border-radius: 8px; background: white; }
+        @keyframes modalSlideIn {
+            from { transform: translate(-50%, -60%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+        .error-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1999;
+        }
     </style>
 </head>
 <body>
@@ -167,61 +187,70 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
-    <div id="landingSection" class="centered-container">
-        <div class="card hover-shine" style="padding-top: 60px; padding-bottom: 60px;">
-            <i class="ri-shield-keyhole-line" style="font-size: 60px; color: var(--accent); margin-bottom: 20px; display: block;"></i>
-            <h1 style="font-size: 32px;">Student Registry</h1>
-            <p style="margin-bottom: 40px;">La certification académique sur la Blockchain.</p>
-            <button onclick="goToChoice()" class="btn-primary hover-shine">
-                Entrer dans le portail <i class="ri-arrow-right-line"></i>
+    <div id="roleChoiceSection" class="centered-container">
+        <div class="card hover-shine" style="padding: 50px 30px;">
+            <i class="ri-graduation-cap-line" style="font-size: 60px; color: var(--accent); margin-bottom: 20px; display: block;"></i>
+            <h1 style="font-size: 28px;">Bienvenue</h1>
+            <p style="margin-bottom: 40px; color:#94a3b8;">Plateforme de Certification Blockchain.</p>
+            
+            <button onclick="showAdminLogin()" class="btn-choice hover-shine">
+                <i class="ri-admin-line"></i> Espace Administrateur
+            </button>
+            <button onclick="showStudentLogin()" class="btn-choice hover-shine">
+                <i class="ri-user-smile-line"></i> Espace Étudiant
             </button>
         </div>
     </div>
 
-    <div id="walletChoiceSection" class="centered-container" style="display: none;">
+    <div id="adminLoginSection" class="centered-container" style="display: none;">
         <div class="card hover-shine">
-            <div style="margin-bottom: 20px;"><i class="ri-shield-keyhole-line" style="font-size: 40px; color: var(--accent);"></i></div>
-            <h1>Portail Étudiant</h1>
-            <p style="margin-bottom: 30px;">Accès sécurisé au registre décentralisé.</p>
-            <p style="color: white; font-weight: 500; margin-bottom: 20px;">Avez-vous un compte MetaMask ?</p>
+            <h2 style="text-align: center;"> Connexion Admin</h2>
+            <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-bottom: 20px;">Vérification du Wallet MetaMask</p>
             
-            <button onclick="tryConnectMetaMask()" class="btn-choice btn-yes hover-shine">
-                <i class="ri-check-line"></i> Oui, j'ai un compte
-            </button>
+            <input type="text" id="adminName" placeholder="Votre Nom">
+            <input type="text" id="adminSurname" placeholder="Votre Prénom">
+            <input type="text" id="adminWalletCheck" placeholder="Votre Adresse Wallet MetaMask (0x...)">
             
-            <button onclick="showInstallMessage()" class="btn-choice btn-no hover-shine">
-                <i class="ri-close-line"></i> Non, je n'ai pas de compte
-            </button>
-            
-            <div id="installAlert" class="inline-alert">
-                <i class="ri-error-warning-line"></i> MetaMask n'est pas détecté.<br>
-                Veuillez l'installer pour continuer : <br>
-                <a href="https://metamask.io/download/" target="_blank">Télécharger MetaMask 🦊</a>
-            </div>
-            
-            <div style="margin-top: 20px; font-size: 12px; color: #64748b; cursor: pointer;" onclick="goBackToLanding()">Retour à l'accueil</div>
+            <button onclick="verifyAdmin()" class="btn-primary hover-shine">Vérifier & Accéder</button>
+            <button onclick="goBackToRoles(true)" style="background:transparent; border:none; color:#94a3b8; width:100%; margin-top:10px; cursor:pointer;">Retour</button>
         </div>
     </div>
 
-    <div id="dashboardSection" class="main-wrapper">
+    <div id="studentLoginSection" class="centered-container" style="display: none;">
+        <div class="card hover-shine">
+            <h2 style="text-align: center;"> Connexion Étudiant</h2>
+            <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-bottom: 20px;">Accès au dossier académique</p>
+            
+            <input type="text" id="studentLoginName" placeholder="Votre Nom">
+            <input type="text" id="studentLoginSurname" placeholder="Votre Prénom">
+            <input type="text" id="studentWalletCheck" placeholder="Votre Adresse Wallet (0x...)">
+            
+            <button onclick="verifyStudent()" class="btn-primary hover-shine">Consulter mon dossier</button>
+            <button onclick="goBackToRoles(true)" style="background:transparent; border:none; color:#94a3b8; width:100%; margin-top:10px; cursor:pointer;">Retour</button>
+        </div>
+    </div>
+
+    <div id="adminDashboard" class="main-wrapper">
         <div class="header">
             <div>
-                <h1>🎓 Portail Étudiant</h1>
-                <div style="font-size: 12px; color: #94a3b8;">
-                    <span style="color: var(--success);">●</span> Wallet: <span id="userWallet" style="color: white; font-family: monospace;">...</span>
-                </div>
+                <h1> Administration</h1>
+                <div style="font-size: 12px; color: #94a3b8;">Connecté en tant que: <span id="adminDisplayName" style="color:white; font-weight:bold;">Admin</span></div>
             </div>
-            <button onclick="window.location.reload()" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 8px; border:none; cursor:pointer;">Déconnexion</button>
+            <div style="display: flex; gap: 10px;">
+                <button id="reloadButton" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 8px; border:none; cursor:pointer;">Déconnexion</button>
+            </div>
         </div>
 
         <div class="dashboard-grid">
             <div class="card">
-                <h2>📝 Nouvelle inscription</h2>
-                <input type="number" id="newId" placeholder="ID Étudiant" class="hover-shine" />
+                <h2> Inscrire un Étudiant</h2>
+                <input type="number" id="newId" placeholder="ID Étudiant (ex: 101)" class="hover-shine" />
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <input type="text" id="firstName" placeholder="Prénom" class="hover-shine" />
                     <input type="text" id="lastName" placeholder="Nom" class="hover-shine" />
                 </div>
+                <input type="text" id="newWallet" placeholder="Adresse Wallet Étudiant (Obligatoire)" class="hover-shine" required />
+
                 <input type="text" id="newCourse" placeholder="Cours (ex: Blockchain)" class="hover-shine" />
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <input type="date" id="newBirth" style="color-scheme: dark;" class="hover-shine" />
@@ -232,136 +261,312 @@
                     <p id="fileName" style="margin: 5px 0 0; font-size: 12px;">Choisir Diplôme (PDF/IMG)</p>
                     <input type="file" id="diplomaFile" style="display: none;" />
                 </div>
-                <button id="addBtn" class="btn-primary hover-shine">🚀 Créer & Inscrire (Gasless)</button>
+                
+                <button type="button" id="addBtn" class="btn-primary hover-shine"> Inscrire</button>
+                <button type="button" id="mintBtn" class="btn-primary hover-shine" style="background: #f59e0b; margin-top: 10px; display: none;">
+                    <i class="ri-fox-line"></i> Minter NFT
+                </button>
                 <p id="addStatus" style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px;"></p>
             </div>
 
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h2>👥 Liste des étudiants (<span id="totalCount">0</span>)</h2>
+                    <h2> Registre Central (<span id="totalCount">0</span>)</h2>
+                    <button id="refreshButton" style="background: transparent; border: 1px solid var(--glass-border); color: var(--accent); padding: 5px 10px; border-radius: 6px; cursor: pointer;">
                     <button onclick="loadStudents()" style="background: transparent; border: 1px solid var(--glass-border); color: var(--accent); padding: 5px 10px; border-radius: 6px; cursor: pointer;">
                         <i id="refreshIcon" class="ri-refresh-line"></i>
                     </button>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <input type="text" id="searchInput" placeholder="🔍 Rechercher par Nom ou ID..." onkeyup="filterStudents()" class="hover-shine" style="border-radius: 12px; background: rgba(0,0,0,0.2);">
-                </div>
+                <input type="text" id="searchInput" placeholder=" Rechercher par Nom ou ID..." onkeyup="filterStudents()" class="hover-shine" style="border-radius: 12px; background: rgba(0,0,0,0.2);">
 
                 <div id="studentListContainer"></div>
             </div>
         </div>
     </div>
 
+        <div id="studentDashboard" class="centered-container" style="display: none; max-width: 600px;">
+        <div class="header">
+            <h1> Mon Espace</h1>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="goBackToRoles(true)" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 8px; border:none; cursor:pointer;">← Retour</button>
+                <button onclick="disconnectStudent()" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 8px; border:none; cursor:pointer;">Déconnexion</button>
+            </div>
+        </div>
+
+        <div class="card hover-shine student-profile-card">
+            <div style="width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 30px;">
+                <i class="ri-user-line" style="color: white;"></i>
+            </div>
+            <h2 id="stProfileName" style="margin-bottom: 5px; color: white; font-size: 24px;">...</h2>
+            <p id="stProfileId" style="color: var(--accent); margin-top: 0;">ID: ...</p>
+            
+            <div style="border-top: 1px solid var(--glass-border); margin: 20px 0;"></div>
+
+            <div class="profile-modules">
+                <div class="detail-row"><span>Module Principal</span> <b id="stProfileCourse">...</b></div>
+                <div class="detail-row"><span>Date de Naissance</span> <b id="stProfileBirth">...</b></div>
+                <div class="detail-row"><span>Statut</span> <b style="color: var(--success);">Inscrit ✅</b></div>
+            </div>
+
+            <p style="margin-bottom: 5px; font-size: 14px; color: #94a3b8;">Résultat Final</p>
+            <div id="stProfileGrade" class="profile-grade" style="color: white;">--/20</div>
+
+            <button id="btnViewDiploma" class="btn-primary hover-shine" style="display: none;" onclick="">
+                <i class="ri-file-paper-2-line"></i> Voir mon Diplôme Certifié
+            </button>
+            <button id="btnAddToMetaMask" class="btn-primary hover-shine" style="display: none; background: #f59e0b; margin-top: 10px;" onclick="">
+                <i class="ri-fox-line"></i> Ajouter à mon MetaMask
+            </button>
+            <div id="walletInfo" style="display: none; font-size: 12px; color: #94a3b8; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--glass-border);">
+                <i class="ri-information-line"></i> <strong>Info Wallet :</strong> Pour ajouter votre diplôme NFT, assurez-vous que le wallet <span id="studentWalletDisplay" style="color: var(--accent); font-family: monospace;"></span> est connecté dans MetaMask.
+            </div>
+            <p id="noDiplomaMsg" style="font-size: 12px; color: var(--danger); display: none; margin-top: 20px;">Aucun diplôme émis pour l'instant.</p>
+        </div>
+    </div>
+
     <div id="diplomaModal" class="modal-overlay">
         <div class="modal-content">
             <iframe id="diplomaPreview" src=""></iframe>
-            <button onclick="document.getElementById('diplomaModal').style.display='none'" class="btn-choice btn-no hover-shine" style="margin-top: 15px; width: auto; padding: 10px 40px;">
-                Fermer l'aperçu
-            </button>
+            <button onclick="document.getElementById('diplomaModal').style.display='none'" class="btn-choice hover-shine" style="margin-top: 15px; width: auto; align-self: center; padding: 10px 40px; border: 1px solid var(--danger); color: var(--danger);">Fermer</button>
         </div>
     </div>
 
     <div id="deleteModal" class="modal-overlay">
-        <div class="modal-delete-content hover-shine">
+        <div class="modal-content modal-small hover-shine" style="justify-content:center;">
             <i class="ri-error-warning-line" style="font-size: 50px; color: var(--danger); margin-bottom: 20px;"></i>
-            <h2 style="color:white; margin-bottom:10px;">Supprimer l'étudiant ?</h2>
-            <p style="color:#94a3b8; margin-bottom:30px;">Voulez-vous vraiment supprimer cet étudiant de la liste locale ? Cette action est irréversible.</p>
+            <h2 style="color:white; margin-bottom:10px;">Supprimer ?</h2>
+            <p style="color:#94a3b8; margin-bottom:30px;">Action irréversible.</p>
             <div style="display:flex; gap:15px; justify-content:center;">
-                <button onclick="closeDeleteModal()" class="btn-choice btn-no hover-shine" style="margin:0; width:auto; padding:10px 30px;">Annuler</button>
-                <button onclick="confirmDeleteAction()" class="btn-choice btn-delete-confirm hover-shine" style="margin:0; width:auto; padding:10px 30px;">Oui, Supprimer</button>
+                <button onclick="closeDeleteModal()" class="btn-choice hover-shine" style="width:auto; padding:10px 30px;">Non</button>
+                <button onclick="confirmDeleteAction()" class="btn-choice hover-shine" style="width:auto; padding:10px 30px; border-color:var(--danger); color:var(--danger);">Oui</button>
             </div>
-        </div>
-    </div>
-
-    <div id="alertModal" class="modal-overlay">
-        <div class="modal-alert-content hover-shine">
-            <i class="ri-information-line" style="font-size: 50px; color: var(--warning); margin-bottom: 20px;"></i>
-            <h2 style="color:white; margin-bottom:10px;">Information Manquante</h2>
-            <p style="color:#94a3b8; margin-bottom:30px;" id="alertMessage">Veuillez remplir tous les champs obligatoires.</p>
-            <button onclick="document.getElementById('alertModal').style.display='none'" class="btn-choice btn-primary hover-shine" style="margin:0 auto; width:auto; padding:10px 40px;">Compris</button>
         </div>
     </div>
 
     <div id="verifyModal" class="modal-overlay">
-        <div class="modal-delete-content hover-shine">
+        <div class="modal-content modal-small hover-shine" style="justify-content:center;">
             <i class="ri-compass-3-line" style="font-size: 50px; color: var(--warning); margin-bottom: 20px;"></i>
-            
-            <h2 style="color:white; margin-bottom:10px;">Vérifier le contrat ?</h2>
-            <p style="color:#94a3b8; margin-bottom:30px;">
-                Vous allez être redirigé vers <b>PolygonScan</b> pour voir toutes les transactions de ce contrat. Voulez-vous continuer ?
-            </p>
-            
-            <div style="display:flex; gap:15px; justify-content:center;">
-                <button onclick="closeVerifyModal()" class="btn-choice btn-no hover-shine" style="margin:0; width:auto; padding:10px 30px;">
-                    Non, retour
-                </button>
-                <button onclick="confirmVerifyAction()" class="btn-choice btn-yes hover-shine" style="margin:0; width:auto; padding:10px 30px;">
-                    Oui, voir tout
-                </button>
+            <h2 style="color:white; margin-bottom:10px;">Voir Blockchain ?</h2>
+            <div style="display:flex; gap:15px; justify-content:center; margin-top:20px;">
+                <button onclick="closeVerifyModal()" class="btn-choice hover-shine" style="width:auto;">Retour</button>
+                <button onclick="confirmVerifyAction()" class="btn-choice hover-shine" style="width:auto; border-color:var(--success); color:var(--success);">Ouvrir PolygonScan</button>
             </div>
         </div>
     </div>
-    
+
+    <div id="notificationContainer"></div>
+
     <script>
         const API_URL = "http://localhost:3000";
-        const CONTRACT_ADDRESS = "0x3E2Bf68F9BbD30A83ff3E06C88916592b294ea17"; 
-        
-        const AMOY_CHAIN_ID_HEX = '0x13882'; 
-        const AMOY_CONFIG = { chainId: AMOY_CHAIN_ID_HEX, chainName: 'Polygon Amoy', nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 }, rpcUrls: ['https://rpc-amoy.polygon.technology'], blockExplorerUrls: ['https://amoy.polygonscan.com/'] };
+        const APP_CONTRACT_ADDRESS = "0x7629CbFDD338E2BC4D4A984e95bd4ba2b89238d8";
+        const ADMIN_WALLET_ADDRESS = "0x5053519908ca1a79ca70eb3889bc3390bc885b66"; // Adresse MetaMask Admin 
 
-        // NAVIGATION
-        function goToChoice() { document.getElementById('landingSection').style.display = 'none'; document.getElementById('walletChoiceSection').style.display = 'block'; }
-        function goBackToLanding() { document.getElementById('walletChoiceSection').style.display = 'none'; document.getElementById('landingSection').style.display = 'block'; document.getElementById('installAlert').style.display = 'none'; }
-        
-        function showInstallMessage() { 
-            const msg = document.getElementById('installAlert');
-            msg.style.display = 'block';
-            msg.innerHTML = `<i class="ri-download-cloud-line"></i> MetaMask n'est pas détecté.<br>Veuillez l'installer pour continuer : <br><a href="https://metamask.io/download/" target="_blank">Télécharger MetaMask 🦊</a>`;
+        // --- NAVIGATION ---
+        function showAdminLogin() { document.getElementById('roleChoiceSection').style.display = 'none'; document.getElementById('adminLoginSection').style.display = 'block'; }
+        function showStudentLogin() { document.getElementById('roleChoiceSection').style.display = 'none'; document.getElementById('studentLoginSection').style.display = 'block'; }
+        function goBackToRoles(explicit = false) {
+            // Ne jamais retourner sauf si clic explicite
+            if (!explicit) return;
+            // Bloquer le retour pendant une inscription en cours
+            if (typeof isAddingStudent !== 'undefined' && isAddingStudent) {
+                showCustomError('Opération en cours', 'Une inscription est en cours. Veuillez patienter avant de quitter.');
+                return;
+            }
+            // Arrêter l'actualisation automatique si l'étudiant est connecté
+            if (window.studentRefreshInterval) {
+                clearInterval(window.studentRefreshInterval);
+                window.studentRefreshInterval = null;
+            }
+            currentStudentData = null;
+            currentStudentWallet = null;
+            
+            document.getElementById('adminLoginSection').style.display = 'none';
+            document.getElementById('studentLoginSection').style.display = 'none';
+            document.getElementById('studentDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('roleChoiceSection').style.display = 'block';
+            document.body.style.justifyContent = 'center';
         }
 
-        async function tryConnectMetaMask() {
-            const alertBox = document.getElementById('installAlert'); alertBox.style.display = 'none';
-            if (typeof window.ethereum !== 'undefined') {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    document.getElementById('walletChoiceSection').style.display = 'none';
-                    document.getElementById('dashboardSection').style.display = 'block';
-                    document.body.style.justifyContent = 'flex-start';
-                    document.getElementById('userWallet').innerText = accounts[0].substring(0, 6) + "...";
-                    loadStudents();
-                } catch (err) { alertBox.style.display = 'block'; alertBox.innerText = "❌ Connexion refusée par l'utilisateur."; }
+        // Variable globale pour stocker l'adresse admin vérifiée
+        let verifiedAdminWallet = null;
+
+        // Empêcher les retours automatiques: drapeau d'inscription en cours
+        let isAddingStudent = false;
+
+        // --- LOGIN ADMIN ---
+        function verifyAdmin() {
+            const name = document.getElementById('adminName').value;
+            const inputAddr = document.getElementById('adminWalletCheck').value.trim();
+            
+            if(!name || !inputAddr) { 
+                showNotification('warning', 'Champs manquants', 'Veuillez remplir tous les champs.');
+                return; 
+            }
+
+            // Vérifier le format de l'adresse
+            if (!inputAddr.startsWith('0x') || inputAddr.length !== 42) {
+                showNotification('error', 'Adresse invalide', 'L\'adresse wallet doit commencer par 0x et faire 42 caractères.');
+                return;
+            }
+
+            // Vérifier que l'adresse correspond à l'adresse admin MetaMask
+            if(inputAddr.toLowerCase() === ADMIN_WALLET_ADDRESS.toLowerCase()) {
+                verifiedAdminWallet = ADMIN_WALLET_ADDRESS; // Stocker l'adresse vérifiée
+                document.getElementById('adminLoginSection').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                document.getElementById('adminDisplayName').innerText = name;
+                document.body.style.justifyContent = 'flex-start';
+                
+                // Attacher les event listeners aux boutons maintenant que le dashboard est visible
+                document.getElementById('addBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    handleAddStudent(e);
+                    return false;
+                });
+
+                document.getElementById('mintBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    mintDiplomaToAdmin(e);
+                    return false;
+                });
+
+                document.getElementById('reloadButton').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.reload();
+                });
+                
+                // Charger les étudiants
+                loadStudents();
+                
+                showNotification('success', 'Connexion réussie', 'Vous êtes connecté en tant qu\'administrateur.');
             } else { 
-                alertBox.style.display = 'block'; 
-                alertBox.innerHTML = `⚠️ MetaMask introuvable !`; 
+                showNotification('error', 'Adresse incorrecte', `L'adresse wallet ne correspond pas à l'adresse admin autorisée.`);
             }
         }
 
-        // UPLOAD
-        const uploadTrigger = document.getElementById('uploadTrigger');
-        const diplomaFile = document.getElementById('diplomaFile');
-        uploadTrigger.addEventListener('click', () => diplomaFile.click());
-        diplomaFile.addEventListener('change', () => { if(diplomaFile.files.length > 0) { document.getElementById('fileName').innerText = "✅ " + diplomaFile.files[0].name; document.getElementById('fileName').style.color = "var(--success)"; } });
+        // Variable globale pour stocker les infos de l'étudiant connecté
+        let currentStudentData = null;
+        let currentStudentWallet = null;
 
-        // --- LOGIQUE DU MODAL VERIFICATION ---
-        function openVerifyModal() {
-            document.getElementById('verifyModal').style.display = 'flex';
+        // Fonction pour mettre à jour l'affichage de l'étudiant
+        function updateStudentDisplay(found) {
+            if (!found) return;
+            
+            currentStudentData = found; // Sauvegarder les données
+            document.getElementById('stProfileName').innerText = found.name;
+            document.getElementById('stProfileId').innerText = "ID #" + found.id;
+            document.getElementById('stProfileCourse').innerText = found.course;
+            document.getElementById('stProfileBirth').innerText = found.birthDate;
+            const gradeElem = document.getElementById('stProfileGrade');
+            gradeElem.innerText = found.grade + "/20";
+            gradeElem.style.color = found.grade >= 10 ? "var(--success)" : "var(--danger)";
+            
+            // Gérer l'affichage du diplôme
+            const btnView = document.getElementById('btnViewDiploma');
+            const btnMetaMask = document.getElementById('btnAddToMetaMask');
+            const noDiplomaMsg = document.getElementById('noDiplomaMsg');
+            
+            if(found.ipfsLink) {
+                btnView.style.display = "inline-block";
+                btnView.onclick = () => { viewDiploma(found.ipfsLink); };
+                
+                // Afficher le bouton MetaMask si le diplôme existe
+                btnMetaMask.style.display = "inline-block";
+                btnMetaMask.onclick = () => { addStudentNFTToMetaMask(found); };
+                
+                // Afficher l'info sur le wallet attendu
+                const walletInfo = document.getElementById('walletInfo');
+                const walletDisplay = document.getElementById('studentWalletDisplay');
+                if (walletInfo && walletDisplay && found.wallet) {
+                    walletInfo.style.display = "block";
+                    walletDisplay.textContent = found.wallet.substring(0,6) + "..." + found.wallet.substring(38);
+                }
+                
+                noDiplomaMsg.style.display = "none";
+            } else { 
+                btnView.style.display = "none";
+                btnMetaMask.style.display = "none";
+                const walletInfo = document.getElementById('walletInfo');
+                if (walletInfo) walletInfo.style.display = "none";
+                noDiplomaMsg.style.display = "block";
+            }
         }
 
-        function closeVerifyModal() {
-            document.getElementById('verifyModal').style.display = 'none';
+        // Fonction pour actualiser les données de l'étudiant connecté
+        async function refreshStudentData() {
+            if (!currentStudentWallet) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/students`);
+                const allStudents = await response.json();
+                const found = allStudents.find(s => s.wallet && s.wallet.toLowerCase() === currentStudentWallet.toLowerCase());
+                if(found) {
+                    updateStudentDisplay(found);
+                }
+            } catch(e) { 
+                console.error('Erreur actualisation données étudiant:', e); 
+            }
         }
 
-        function confirmVerifyAction() {
-            // Ouvre l'adresse du contrat sur PolygonScan dans un nouvel onglet
-            const url = `https://amoy.polygonscan.com/address/${CONTRACT_ADDRESS}`;
-            window.open(url, '_blank');
-            closeVerifyModal();
+        // Fonction pour déconnecter l'étudiant
+        function disconnectStudent() {
+            // Si une inscription est en cours, bloquer
+            if (typeof isAddingStudent !== 'undefined' && isAddingStudent) {
+                showCustomError('Opération en cours', 'Une inscription est en cours. Veuillez patienter avant de vous déconnecter.');
+                return;
+            }
+            // Arrêter l'actualisation automatique
+            if (window.studentRefreshInterval) {
+                clearInterval(window.studentRefreshInterval);
+                window.studentRefreshInterval = null;
+            }
+            currentStudentData = null;
+            currentStudentWallet = null;
+            window.location.reload();
         }
 
-        // GESTION DONNÉES
+        // --- LOGIN ETUDIANT ---
+        async function verifyStudent() {
+            const name = document.getElementById('studentLoginName').value;
+            const wallet = document.getElementById('studentWalletCheck').value.trim();
+            if(!name || !wallet) { 
+                showNotification('error', 'Champs manquants', 'Veuillez remplir tous les champs.');
+                return; 
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/students`);
+                const allStudents = await response.json();
+                const found = allStudents.find(s => s.wallet && s.wallet.toLowerCase() === wallet.toLowerCase());
+                if(found) {
+                    currentStudentWallet = wallet.toLowerCase(); // Sauvegarder le wallet
+                    document.getElementById('studentLoginSection').style.display = 'none';
+                    document.getElementById('studentDashboard').style.display = 'block';
+                    document.body.style.justifyContent = 'flex-start';
+                    updateStudentDisplay(found);
+                    
+                    // Actualiser les données toutes les 5 secondes si l'étudiant est connecté
+                    if (window.studentRefreshInterval) {
+                        clearInterval(window.studentRefreshInterval);
+                    }
+                    window.studentRefreshInterval = setInterval(refreshStudentData, 5000);
+                } else { 
+                    showNotification('error', 'Aucun dossier trouvé', 'Aucun étudiant ne correspond à ces informations.');
+                }
+            } catch(e) { 
+                console.error(e); 
+                showNotification('error', 'Erreur Serveur', 'Impossible de contacter le serveur.');
+            }
+        }
+
+        // --- DASHBOARD FONCTIONS ---
         let allStudentsGlobal = []; 
-
         async function loadStudents() {
             const refreshIcon = document.getElementById('refreshIcon');
             try { 
@@ -369,11 +574,8 @@
                 const response = await fetch(`${API_URL}/students`); 
                 allStudentsGlobal = await response.json(); 
                 renderList(allStudentsGlobal); 
-            } catch (error) { 
-                console.error("Erreur chargement:", error); 
-            } finally {
-                if(refreshIcon) setTimeout(() => refreshIcon.classList.remove('ri-spin'), 500);
-            }
+            } catch (error) { console.error("Erreur chargement:", error); } 
+            finally { if(refreshIcon) setTimeout(() => refreshIcon.classList.remove('ri-spin'), 500); }
         }
 
         function filterStudents() {
@@ -386,76 +588,201 @@
             const container = document.getElementById('studentListContainer');
             container.innerHTML = "";
             document.getElementById('totalCount').innerText = data.length;
-
             data.forEach(s => {
                 let btns = "";
                 if(s.ipfsLink) {
                     btns += `<button class="btn-icon" style="background:var(--accent); color:white;" onclick="viewDiploma('${s.ipfsLink}')"><i class="ri-eye-line"></i></button>`;
-                    btns += `<button class="btn-icon" style="background:#f59e0b; color:black;" onclick="openVerifyModal()" title="Vérifier sur la Blockchain"><i class="ri-file-list-3-line"></i></button>`;
+                    btns += `<button class="btn-icon" style="background:#f59e0b; color:black;" onclick="openVerifyModal()" title="Vérifier"><i class="ri-file-list-3-line"></i></button>`;
                 }
                 btns += `<button class="btn-icon" style="background:rgba(239,68,68,0.2); color:var(--danger);" onclick="askDelete('${s.id}')"><i class="ri-delete-bin-line"></i></button>`;
-
                 let gradeColor = s.grade >= 10 ? "var(--success)" : "var(--danger)";
+                let walletDisplay = s.wallet ? s.wallet.substring(0,6)+"..." : "Non renseigné";
                 
                 let item = `
                 <div class="student-item hover-shine">
                     <div class="student-header" onclick="toggleDetails(this)">
-                        <div>
-                            <h3 style="display:flex; align-items:center; gap:10px;">
-                                <i class="ri-arrow-down-s-line" style="transition:0.3s"></i> 
-                                ${s.name}
-                            </h3>
-                            <span style="opacity:0.6; font-size:12px; margin-left:25px;">${s.course}</span>
-                        </div>
+                        <div><h3 style="display:flex; align-items:center; gap:10px;">${s.name}</h3><span style="opacity:0.6; font-size:12px;">${s.course}</span></div>
                         <span>ID #${s.id}</span>
                     </div>
-                    
-                    <div class="student-details">
-                        <div style="padding-top:10px;">
-                            <div class="detail-row"><span>Note Obtenue:</span> <b style="color:${gradeColor}">${s.grade}/20</b></div>
-                            <div class="detail-row"><span>Date de Naissance:</span> <b>${s.birthDate || "Non renseigné"}</b></div>
-                            <div class="detail-row"><span>Statut Diplôme:</span> <b>${s.ipfsLink ? "✅ Certifié" : "❌ Non Certifié"}</b></div>
-                            <div class="action-buttons">${btns}</div>
-                        </div>
-                    </div>
+                    <div class="student-details"><div style="padding-top:10px;">
+                        <div class="detail-row"><span>Wallet:</span> <span style="font-family:monospace; color:var(--accent);">${walletDisplay}</span></div>
+                        <div class="detail-row"><span>Note:</span> <b style="color:${gradeColor}">${s.grade}/20</b></div>
+                        <div class="detail-row"><span>Statut Diplôme:</span> <b>${s.ipfsLink ? "✅ Certifié" : "❌ Non Certifié"}</b></div>
+                        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">${btns}</div>
+                    </div></div>
                 </div>`;
                 container.innerHTML += item;
             });
         }
+        window.toggleDetails = function(header) { const details = header.nextElementSibling; details.style.display = details.style.display === "block" ? "none" : "block"; }
 
-        window.toggleDetails = function(header) {
-            const details = header.nextElementSibling;
-            const icon = header.querySelector('i');
-            if (details.style.display === "block") { details.style.display = "none"; icon.style.transform = "rotate(0deg)"; } 
-            else { details.style.display = "block"; icon.style.transform = "rotate(180deg)"; }
+        // --- UPLOAD ---
+        const uploadTrigger = document.getElementById('uploadTrigger');
+        const diplomaFile = document.getElementById('diplomaFile');
+        uploadTrigger.addEventListener('click', () => diplomaFile.click());
+        diplomaFile.addEventListener('change', () => { if(diplomaFile.files.length > 0) { document.getElementById('fileName').innerText = "✅ " + diplomaFile.files[0].name; document.getElementById('fileName').style.color = "var(--success)"; } });
+
+        // --- SYSTÈME DE NOTIFICATIONS ---
+        function showNotification(type, title, message, duration = 5000) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `custom-notification notification-${type}`;
+            
+            const icons = {
+                success: 'ri-checkbox-circle-line',
+                error: 'ri-error-warning-line',
+                warning: 'ri-alert-line',
+                info: 'ri-information-line'
+            };
+            
+            notification.innerHTML = `
+                <i class="${icons[type]} notification-icon" style="color: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : type === 'warning' ? 'var(--warning)' : '#3b82f6'};"></i>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
         }
 
-        function viewDiploma(url) { document.getElementById('diplomaPreview').src = url; document.getElementById('diplomaModal').style.display = 'flex'; }
+        // Variables pour stocker les données après inscription
+        let lastRegisteredStudent = null;
+        let timerInterval = null;
 
-        // SUPPRESSION
-        let idToDelete = null;
-        function askDelete(id) { idToDelete = id; document.getElementById('deleteModal').style.display = 'flex'; }
-        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; idToDelete = null; }
+        // Fonction pour afficher un minuteur avec estimation
+        function showTimer(containerId, estimatedSeconds, message) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-        async function confirmDeleteAction() {
-            if(!idToDelete) return;
-            try { 
-                await fetch(`${API_URL}/delete-student`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: idToDelete }) }); 
-                loadStudents(); 
-                closeDeleteModal();
-            } catch(e) { alert("Erreur suppression"); closeDeleteModal(); }
+            // Nettoyer l'ancien timer s'il existe
+            clearTimer();
+
+            const timerDiv = document.createElement('div');
+            timerDiv.className = 'timer-container';
+            timerDiv.id = 'activeTimer';
+            
+            const startTime = Date.now();
+            const endTime = startTime + (estimatedSeconds * 1000);
+            
+            timerDiv.innerHTML = `
+                <div class="timer-text">
+                    <span><i class="ri-time-line"></i> ${message}</span>
+                    <span id="timerDisplay" style="color: var(--accent); font-weight: bold;">~${estimatedSeconds}s restantes</span>
+                </div>
+                <div class="timer-bar">
+                    <div id="timerProgress" class="timer-progress" style="width: 0%;"></div>
+                </div>
+            `;
+            
+            container.appendChild(timerDiv);
+            
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                const elapsed = Math.floor((now - startTime) / 1000);
+                const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+                const progress = Math.min(100, (elapsed / estimatedSeconds) * 100);
+                
+                const timerDisplay = document.getElementById('timerDisplay');
+                const timerProgress = document.getElementById('timerProgress');
+                
+                if (timerDisplay) {
+                    if (remaining > 0) {
+                        timerDisplay.textContent = `~${remaining}s restantes`;
+                    } else {
+                        timerDisplay.textContent = `${elapsed}s écoulées`;
+                    }
+                }
+                
+                if (timerProgress) {
+                    timerProgress.style.width = progress + '%';
+                }
+            }, 100);
         }
 
-        // FONCTION ALERTE CUSTOM
-        function showCustomAlert(title, message) {
-            const modal = document.getElementById('alertModal');
-            modal.querySelector('h2').innerText = title;
-            document.getElementById('alertMessage').innerHTML = message;
-            modal.style.display = 'flex';
+        function clearTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            const activeTimer = document.getElementById('activeTimer');
+            if (activeTimer) activeTimer.remove();
         }
 
-        // AJOUT (Version corrigée avec Timer et Fallback)
-        document.getElementById('addBtn').addEventListener('click', async () => {
+        // Fonction pour afficher une erreur personnalisée
+        function showCustomError(title, message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'error-modal-overlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'error-modal';
+            modal.innerHTML = `
+                <div style="text-align: center;">
+                    <i class="ri-error-warning-line" style="font-size: 50px; color: var(--danger); margin-bottom: 20px; display: block;"></i>
+                    <h2 style="color: white; margin-bottom: 15px;">${title}</h2>
+                    <p style="color: #94a3b8; margin-bottom: 30px; line-height: 1.6;">${message}</p>
+                    <button onclick="this.closest('.error-modal').remove(); document.querySelector('.error-modal-overlay').remove();" 
+                            class="btn-primary hover-shine" 
+                            style="width: auto; padding: 12px 40px;">
+                        Compris
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(modal);
+            
+            overlay.onclick = () => {
+                modal.remove();
+                overlay.remove();
+            };
+        }
+
+        // Protection contre l'actualisation pendant les opérations
+        window.addEventListener('beforeunload', function(e) {
+            if (isAddingStudent) {
+                e.preventDefault();
+                return undefined;
+            }
+        });
+
+        // Bloquer F5 et Ctrl+R pendant les opérations
+        document.addEventListener('keydown', function(e) {
+            if (isAddingStudent) {
+                // F5
+                if (e.key === 'F5' || e.keyCode === 116) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showNotification('warning', 'Opération en cours', 'Veuillez patienter, une opération est en cours...');
+                    return false;
+                }
+                // Ctrl+R ou Cmd+R
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.keyCode === 82)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showNotification('warning', 'Opération en cours', 'Veuillez patienter, une opération est en cours...');
+                    return false;
+                }
+            }
+        });
+
+        // --- LOGIQUE INSCRIPTION ---
+        // Fonction principale pour gérer l'ajout d'étudiant
+        async function handleAddStudent(e) {
+            // Empêcher tout comportement par défaut du formulaire
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Début d'inscription: empêcher toute navigation involontaire
+            isAddingStudent = true;
+            const addBtn = document.getElementById('addBtn');
             const id = document.getElementById('newId').value;
             const lastName = document.getElementById('lastName').value;
             const firstName = document.getElementById('firstName').value;
@@ -463,119 +790,309 @@
             const course = document.getElementById('newCourse').value;
             const birthDate = document.getElementById('newBirth').value;
             const grade = document.getElementById('newGrade').value;
-            const fileInput = document.getElementById('diplomaFile');
-            const file = fileInput.files[0];
+            const walletInput = document.getElementById('newWallet').value.trim();
+            const file = document.getElementById('diplomaFile').files[0];
             const status = document.getElementById('addStatus');
+            const mintBtn = document.getElementById('mintBtn');
 
-            // Validation
-            if(!id || !lastName || !firstName || !course || !grade || !birthDate || !file) {
-                showCustomAlert("Oups !", "Veuillez remplir toutes les informations (ID, Prénom, Nom, Cours, Date, Note, Diplôme).");
-                return;
+            if(!id || !lastName || !firstName || !course || !grade || !file || !walletInput) { 
+                showNotification('warning', 'Champs manquants', 'Veuillez remplir tous les champs obligatoires, y compris l\'adresse wallet de l\'étudiant.');
+                isAddingStudent = false;
+                return false;
             }
 
-            status.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Envoi au Relayer...";
-            
+            // Vérifier que l'adresse wallet est valide
+            if (!walletInput.startsWith('0x') || walletInput.length !== 42) {
+                showNotification('error', 'Adresse invalide', 'L\'adresse wallet doit commencer par 0x et faire 42 caractères.');
+                isAddingStudent = false;
+                return false;
+            }
+
+            // Réassurance UI: rester dans le dashboard admin
+            const role = document.getElementById('roleChoiceSection');
+            const adminDash = document.getElementById('adminDashboard');
+            if (role && adminDash) { role.style.display = 'none'; adminDash.style.display = 'block'; document.body.style.justifyContent = 'flex-start'; }
+
+            status.innerHTML = "<div style='color:#3b82f6'><i class='ri-loader-4-line ri-spin'></i> Inscription sur la Blockchain...</div>";
+            if(addBtn) addBtn.disabled = true;
+            if(mintBtn) mintBtn.style.display = 'none';
+
+            // Afficher le minuteur (estimation: 15-20 secondes pour l'inscription)
+            showTimer('addStatus', 20, 'Inscription en cours...');
+
             try {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 const formData = new FormData();
                 formData.append('id', id); formData.append('name', name); 
                 formData.append('course', course); formData.append('birthDate', birthDate);
-                formData.append('grade', grade); formData.append('studentWallet', accounts[0]);
+                formData.append('grade', grade); formData.append('studentWallet', walletInput);
                 formData.append('diploma', file);
 
                 const res = await fetch(`${API_URL}/add-student`, { method: 'POST', body: formData });
                 const result = await res.json();
                 
                 if(result.success) {
-                    loadStudents();
+                    clearTimer();
+                    
+                    // Sauvegarder les données pour le minting
+                    lastRegisteredStudent = {
+                        studentId: result.studentId,
+                        ipfsLink: result.ipfsLink,
+                        name: name,
+                        studentWallet: walletInput
+                    };
 
-                    // 1. Nettoyage
-                    document.getElementById('newId').value = "";
+                    // Actualisation de la liste
+                    await loadStudents(); 
+                    // Assurer que nous restons dans le dashboard admin sans rechargement
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    document.body.style.justifyContent = 'flex-start';
+
+                    status.innerHTML = `<div style="color:var(--success); font-weight:bold; margin-bottom:10px;">✅ Étudiant inscrit avec succès !</div>`;
+
+                    // Afficher le bouton Minter NFT
+                    if(mintBtn) {
+                        mintBtn.style.display = "block";
+                        // Le onclick est déjà défini dans le HTML
+                    }
+
+                    // Reset des champs
+                    document.getElementById('newId').value = ""; 
                     document.getElementById('lastName').value = "";
-                    document.getElementById('firstName').value = "";
+                    document.getElementById('firstName').value = ""; 
                     document.getElementById('newCourse').value = "";
                     document.getElementById('newBirth').value = "";
                     document.getElementById('newGrade').value = "";
-                    fileInput.value = ""; 
+                    document.getElementById('newWallet').value = "";
+                    diplomaFile.value = ""; 
                     document.getElementById('fileName').innerText = "Choisir Diplôme (PDF/IMG)";
-                    document.getElementById('fileName').style.color = "#94a3b8"; 
+                    document.getElementById('fileName').style.color = "";
 
-                    // 2. Affichage du Timer
-                    // On injecte le HTML
-                    // --- 2. BOUTON ORANGE (Version Modal) ---
-                    // --- 2. RESTAURATION DU BOUTON METAMASK + BOUTON VERIF ---
-                    status.innerHTML = `
-                        <div style="margin-top: 15px;">
-                            <div style="color: var(--success); margin-bottom: 10px; font-weight: bold;">
-                                ✅ NFT créé (ID: ${result.tokenId}) !
-                            </div>
-                            
-                            <button id="btnTimerMetaMask" class="btn-primary" style="background: #475569; cursor: not-allowed; opacity: 0.8; margin-bottom: 10px;" disabled>
-                                <i class="ri-loader-4-line ri-spin"></i> Attente réseau (10s)...
-                            </button>
+                    showNotification('success', 'Inscription réussie', 'L\'étudiant a été inscrit. Vous pouvez maintenant minter le NFT.');
+                } else { 
+                    clearTimer();
+                    showCustomError('Erreur d\'inscription', result.error || 'Une erreur est survenue lors de l\'inscription.');
+                    status.innerHTML = `<div style="color:var(--danger)">❌ Erreur: ${result.error}</div>`;
+                }
+            } catch(e) { 
+                clearTimer();
+                console.error(e); 
+                showCustomError('Erreur Serveur', 'Impossible de contacter le serveur. Veuillez vérifier votre connexion et réessayer.');
+                status.innerText = "❌ Erreur Serveur";
+            } 
+            finally { 
+                const addBtn = document.getElementById('addBtn');
+                if(addBtn) addBtn.disabled = false;
+                if(mintBtn) mintBtn.style.display = 'block';
+                if(mintBtn) mintBtn.disabled = false;
+                // Fin de l'inscription, autoriser de nouveau la navigation
+                isAddingStudent = false;
+            }
+            return false;
+        }
 
-                            <button onclick="openVerifyModal()" class="btn-choice btn-yes hover-shine" style="width: 100%; justify-content: center; border: 1px solid var(--warning); color: var(--warning);">
-                                <i class="ri-file-list-3-line"></i> Vérifier les transactions
-                            </button>
-                        </div>
-                    `;
-
-                    // 3. Logique du Timer (Exécutée immédiatement après l'injection HTML)
-                    let timeLeft = 10;
-                    const btnTimer = document.getElementById('btnTimerMetaMask');
-                    
-                    const timerInterval = setInterval(() => {
-                        timeLeft--;
-                        if(btnTimer) { // Vérification de sécurité
-                            if(timeLeft > 0) {
-                                btnTimer.innerHTML = `<i class="ri-loader-4-line ri-spin"></i> Attente réseau (${timeLeft}s)...`;
-                            } else {
-                                clearInterval(timerInterval);
-                                btnTimer.disabled = false;
-                                btnTimer.style.background = "#f59e0b"; // Orange
-                                btnTimer.style.cursor = "pointer";
-                                btnTimer.style.opacity = "1";
-                                btnTimer.innerHTML = `<i class="ri-fox-line"></i> Ajouter au Wallet`;
-                                btnTimer.onclick = function() { safeAddToMetaMask(result.tokenId); };
-                            }
-                        } else {
-                            clearInterval(timerInterval); // Si le bouton n'existe plus (changement de page), on arrête
-                        }
-                    }, 1000);
-
-                } else { status.innerText = "❌ Erreur: " + JSON.stringify(result); }
-            } catch(e) { status.innerText = "❌ Erreur Serveur"; console.error(e); }
-        });
-
-        // Correction : Symbole SDIP + Gestion d'erreur "Unable to verify"
-        async function safeAddToMetaMask(tokenId) {
-            const status = document.getElementById('addStatus');
-            const btnTimer = document.getElementById('btnTimerMetaMask'); // On récupère le bouton
+        // --- LOGIQUE MINTING NFT ---
+        async function mintDiplomaToAdmin(e) {
+            // Empêcher tout comportement par défaut
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                if (e.cancelable) {
+                    e.cancelBubble = true;
+                    e.preventDefault();
+                }
+            }
             
-            // Changement d'état visuel
-            if(btnTimer) {
-                btnTimer.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Ouverture MetaMask...";
+            if (window.event) {
+                window.event.cancelBubble = true;
+                window.event.preventDefault();
+                window.event.stopPropagation();
+                window.event.returnValue = false;
+            }
+            
+            if (!lastRegisteredStudent) {
+                showNotification('error', 'Erreur', 'Aucun étudiant récemment inscrit.');
+                return false;
+            }
+
+            const mintBtn = document.getElementById('mintBtn');
+            const status = document.getElementById('addStatus');
+            const originalContent = mintBtn.innerHTML;
+
+            try {
+                // D'abord, vérifier et connecter MetaMask pour obtenir l'adresse admin
+                mintBtn.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Connexion MetaMask...";
+                mintBtn.disabled = true;
+                status.innerHTML = "<div style='color:#3b82f6'><i class='ri-loader-4-line ri-spin'></i> Connexion à MetaMask...</div>";
+
+                const adminAccount = await checkAndConnectMetaMask();
+                if (!adminAccount) {
+                    mintBtn.innerHTML = originalContent;
+                    mintBtn.disabled = false;
+                    return;
+                }
+
+                // Vérifier que l'adresse correspond à l'adresse admin
+                const adminWalletForMint = verifiedAdminWallet || ADMIN_WALLET_ADDRESS;
+                if (adminAccount.toLowerCase() !== adminWalletForMint.toLowerCase()) {
+                    showNotification('error', 'Wallet incorrect', `Veuillez connecter le wallet admin MetaMask: ${adminWalletForMint.substring(0,6)}...${adminWalletForMint.substring(38)} dans MetaMask avant de continuer.`);
+                    mintBtn.innerHTML = originalContent;
+                    mintBtn.disabled = false;
+                    return;
+                }
+
+                mintBtn.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Mint en cours...";
+                status.innerHTML = "<div style='color:#3b82f6'><i class='ri-loader-4-line ri-spin'></i> Mint du NFT vers votre wallet admin et l'étudiant...</div>";
+                
+                // Afficher le minuteur (estimation: 30-40 secondes pour le minting)
+                showTimer('addStatus', 40, 'Minting du NFT en cours...');
+                
+                // Appel au serveur pour minter vers les deux wallets
+                const res = await fetch(`${API_URL}/mint-diploma`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: lastRegisteredStudent.studentId,
+                        ipfsLink: lastRegisteredStudent.ipfsLink,
+                        adminWallet: adminWalletForMint,
+                        studentWallet: lastRegisteredStudent.studentWallet
+                    })
+                });
+
+                const result = await res.json();
+
+                if(result.success) {
+                    clearTimer();
+                    status.innerHTML = `<div style="color:var(--success); font-weight:bold; margin-bottom:10px;">✅ NFT minté avec succès !</div>`;
+                    status.innerHTML += `<div style="font-size:12px; color:#94a3b8; margin-top:5px;">Token Admin: ${result.adminTokenId} | Token Étudiant: ${result.studentTokenId}</div>`;
+                    
+                    // Actualiser la liste
+                    await loadStudents();
+                    
+                    // Ajouter à MetaMask automatiquement
+                    mintBtn.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Ajout à MetaMask...";
+                    status.innerHTML += "<div style='color:#3b82f6; margin-top:10px;'><i class='ri-loader-4-line ri-spin'></i> Ajout du NFT à votre wallet MetaMask...</div>";
+                    
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_watchAsset',
+                            params: { 
+                                type: 'ERC721', 
+                                options: { 
+                                    address: APP_CONTRACT_ADDRESS, 
+                                    tokenId: result.adminTokenId.toString(), 
+                                    symbol: "SDIP", 
+                                    decimals: 0 
+                                } 
+                            },
+                        });
+                        
+                        mintBtn.innerHTML = "✅ NFT ajouté à MetaMask !";
+                        mintBtn.style.background = "var(--success)";
+                        status.innerHTML = `<div style="color:var(--success); font-weight:bold; margin-bottom:10px;">✅ NFT minté et ajouté à votre wallet MetaMask (Token ID: ${result.adminTokenId}) !</div>`;
+                        status.innerHTML += `<div style="font-size:12px; color:#94a3b8; margin-top:5px;">Le NFT a également été minté vers le wallet de l'étudiant (Token ID: ${result.studentTokenId})</div>`;
+                        showNotification('success', 'NFT ajouté', 'Le diplôme a été ajouté à votre wallet MetaMask et à celui de l\'étudiant.');
+                    } catch (metaMaskError) {
+                        console.error('Erreur MetaMask:', metaMaskError);
+                        mintBtn.innerHTML = originalContent;
+                        status.innerHTML += `<div style="font-size:12px; color:#94a3b8; margin-top:10px;">⚠️ Le NFT a été minté mais l'ajout à MetaMask a échoué. Vous pouvez l'ajouter manuellement avec le Token ID: ${result.adminTokenId}</div>`;
+                    }
+                } else {
+                    clearTimer();
+                    showCustomError('Erreur de Minting', result.error || 'Impossible de minter le NFT.');
+                    status.innerHTML = `<div style="color:var(--danger)">❌ Erreur: ${result.error}</div>`;
+                    mintBtn.innerHTML = originalContent;
+                }
+            } catch(e) {
+                clearTimer();
+                console.error(e);
+                showCustomError('Erreur de Minting', 'Une erreur est survenue lors du minting du NFT. Veuillez réessayer.');
+                status.innerText = "❌ Erreur lors du mint";
+                mintBtn.innerHTML = originalContent;
+            } 
+            finally { 
+                mintBtn.disabled = false;
+            }
+            
+            // Retourner false pour empêcher toute action par défaut
+            return false;
+        }
+
+        // --- UTILITAIRES ---
+        function viewDiploma(url) { document.getElementById('diplomaPreview').src = url; document.getElementById('diplomaModal').style.display = 'flex'; }
+        let idToDelete = null;
+        function askDelete(id) { idToDelete = id; document.getElementById('deleteModal').style.display = 'flex'; }
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; idToDelete = null; }
+        async function confirmDeleteAction() {
+            if(!idToDelete) return;
+            try { 
+                await fetch(`${API_URL}/delete-student`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: idToDelete }) }); 
+                loadStudents(); 
+                closeDeleteModal();
+                showNotification('success', 'Suppression réussie', 'L\'étudiant a été supprimé avec succès.');
+            } 
+            catch(e) { 
+                showCustomError('Erreur de suppression', 'Impossible de supprimer l\'étudiant. Veuillez réessayer.');
+                closeDeleteModal(); 
+            }
+        }
+        function openVerifyModal() { document.getElementById('verifyModal').style.display = 'flex'; }
+        function closeVerifyModal() { document.getElementById('verifyModal').style.display = 'none'; }
+        function confirmVerifyAction() { window.open(`https://amoy.polygonscan.com/address/${APP_CONTRACT_ADDRESS}`, '_blank'); closeVerifyModal(); }
+
+        // Fonction pour vérifier et connecter MetaMask
+        async function checkAndConnectMetaMask() {
+            if (typeof window.ethereum === 'undefined') {
+                showNotification('warning', 'MetaMask requis', 'Veuillez installer MetaMask pour continuer.');
+                setTimeout(() => window.open('https://metamask.io/download/', '_blank'), 2000);
+                return null;
+            }
+
+            try {
+                // Demander la connexion au wallet
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (accounts.length === 0) {
+                    showNotification('warning', 'Aucun compte', 'Aucun compte MetaMask connecté.');
+                    return null;
+                }
+                return accounts[0];
+            } catch (error) {
+                if (error.code === 4001) {
+                    showNotification('warning', 'Connexion annulée', 'Vous avez annulé la connexion à MetaMask.');
+                } else {
+                    console.error('Erreur connexion MetaMask:', error);
+                    showNotification('error', 'Erreur', 'Impossible de se connecter à MetaMask.');
+                }
+                return null;
+            }
+        }
+
+        // Fonction pour ajouter le NFT à MetaMask (Admin)
+        async function safeAddToMetaMask(tokenId) {
+            const btnTimer = document.getElementById('btnMintMetaMask');
+            try {
+                if(btnTimer) btnTimer.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Connexion...";
                 btnTimer.disabled = true;
-            } else {
-                status.innerHTML = "🦊 Ouverture de MetaMask...";
-            }
 
-            try {
-                // 1. Vérification du Réseau
-                await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: AMOY_CHAIN_ID_HEX }] });
-            } catch (e) {
-                // Si le réseau n'existe pas, on l'ajoute
-                if (e.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [AMOY_CONFIG] });
-            }
+                // Vérifier et connecter MetaMask
+                const account = await checkAndConnectMetaMask();
+                if (!account) {
+                    if(btnTimer) { 
+                        btnTimer.innerHTML = "<i class='ri-fox-line'></i> Ajouter à mon MetaMask";
+                        btnTimer.disabled = false;
+                    }
+                    return;
+                }
 
-            try {
-                // 2. Demande d'ajout (CORRIGÉ : Symbole SDIP)
+                if(btnTimer) btnTimer.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Ajout en cours...";
+                
+                // Ajouter le NFT à MetaMask
                 await window.ethereum.request({
                     method: 'wallet_watchAsset',
                     params: { 
                         type: 'ERC721', 
                         options: { 
-                            address: CONTRACT_ADDRESS, 
+                            address: APP_CONTRACT_ADDRESS, 
                             tokenId: tokenId.toString(), 
                             symbol: "SDIP", 
                             decimals: 0 
@@ -583,27 +1100,229 @@
                     },
                 });
                 
-                // Succès
-                if(btnTimer) {
-                    btnTimer.innerHTML = "✅ Ajouté dans MetaMask !";
+                if(btnTimer) { 
+                    btnTimer.innerHTML = "✅ Ajouté à MetaMask !"; 
                     btnTimer.style.background = "var(--success)";
-                    btnTimer.style.color = "white";
+                    btnTimer.disabled = false;
+                }
+                showNotification('success', 'NFT ajouté', 'Le diplôme a été ajouté à votre wallet MetaMask.');
+            } catch (error) { 
+                console.error('Erreur ajout NFT:', error);
+                if(btnTimer) { 
+                    btnTimer.innerHTML = "⚠️ Erreur/Annulé";
+                    btnTimer.disabled = false;
+                }
+                if (error.code === 4001) {
+                    showNotification('warning', 'Ajout annulé', 'Vous avez annulé l\'ajout du NFT.');
                 } else {
-                    status.innerHTML = "✅ Ajouté !";
+                    showNotification('error', 'Erreur', 'Impossible d\'ajouter le NFT à MetaMask.');
+                }
+            }
+        }
+
+        // Fonction pour ajouter tous les diplômes à MetaMask (Admin)
+        async function addAllDiplomasToMetaMask() {
+            const btn = document.getElementById('btnAddAllNFTs');
+            try {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Chargement...";
+                btn.disabled = true;
+
+                // Vérifier et connecter MetaMask
+                const account = await checkAndConnectMetaMask();
+                if (!account) {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    return;
                 }
 
-            } catch (error) {
-                console.error(error);
-                // Si MetaMask échoue (Erreur de propriété ou Annulation), on affiche le LIEN PolygonScan
-                const errorMsg = "⚠️ Impossible de vérifier le token (Réseau lent).";
-                const link = `https://amoy.polygonscan.com/token/${CONTRACT_ADDRESS}?a=${tokenId}`;
+                // Récupérer tous les étudiants
+                const response = await fetch(`${API_URL}/students`);
+                const allStudents = await response.json();
                 
-                status.innerHTML = `
-                    <div style="margin-top:10px; color:#fca5a5;">${errorMsg}</div>
-                    <a href="${link}" target="_blank" class="btn-primary hover-shine" style="display:block; text-align:center; text-decoration:none; margin-top:5px; background:var(--accent);">
-                        <i class="ri-external-link-line"></i> Voir la preuve sur PolygonScan
-                    </a>
-                `;
+                // Filtrer ceux qui ont un diplôme
+                const studentsWithDiploma = allStudents.filter(s => s.ipfsLink);
+                
+                if (studentsWithDiploma.length === 0) {
+                    showNotification('warning', 'Aucun diplôme', 'Aucun diplôme disponible à ajouter.');
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    return;
+                }
+
+                btn.innerHTML = `<i class='ri-loader-4-line ri-spin'></i> Ajout de ${studentsWithDiploma.length} NFT(s)...`;
+                
+                // Récupérer le provider et le contrat
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const contract = new ethers.Contract(APP_CONTRACT_ADDRESS, [
+                    "function students(uint256) view returns (uint256 id, string memory name, string memory course, string memory birthDate, uint256 grade, address wallet, bool isEnrolled, uint256 diplomaTokenId)"
+                ], provider);
+
+                let successCount = 0;
+                let errorCount = 0;
+
+                // Ajouter chaque NFT
+                for (const student of studentsWithDiploma) {
+                    try {
+                        const studentOnChain = await contract.students(student.id);
+                        const tokenId = studentOnChain.diplomaTokenId.toString();
+
+                        if (tokenId !== "0") {
+                            await window.ethereum.request({
+                                method: 'wallet_watchAsset',
+                                params: { 
+                                    type: 'ERC721', 
+                                    options: { 
+                                        address: APP_CONTRACT_ADDRESS, 
+                                        tokenId: tokenId, 
+                                        symbol: "SDIP", 
+                                        decimals: 0 
+                                    } 
+                                },
+                            });
+                            successCount++;
+                        }
+                    } catch (error) {
+                        console.error(`Erreur pour l'étudiant ${student.id}:`, error);
+                        errorCount++;
+                    }
+                }
+
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+
+                if (successCount > 0) {
+                    showNotification('success', 'NFTs ajoutés', `${successCount} diplôme(s) ajouté(s) à votre wallet MetaMask.${errorCount > 0 ? ` ${errorCount} erreur(s).` : ''}`);
+                } else {
+                    showNotification('error', 'Aucun ajout', 'Aucun diplôme n\'a pu être ajouté.');
+                }
+            } catch (error) {
+                console.error('Erreur ajout multiple:', error);
+                showNotification('error', 'Erreur', 'Impossible d\'ajouter les diplômes.');
+                btn.innerHTML = "<i class='ri-fox-line'></i> Ajouter tous les NFTs";
+                btn.disabled = false;
+            }
+        }
+
+        // Fonction pour ajouter le NFT à MetaMask (Étudiant)
+        async function addStudentNFTToMetaMask(studentData) {
+            const btnTimer = document.getElementById('btnAddToMetaMask');
+            try {
+                if(btnTimer) {
+                    btnTimer.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Connexion...";
+                    btnTimer.disabled = true;
+                }
+
+                // Vérifier et connecter MetaMask
+                const account = await checkAndConnectMetaMask();
+                if (!account) {
+                    if(btnTimer) { 
+                        btnTimer.innerHTML = "<i class='ri-fox-line'></i> Ajouter à mon MetaMask";
+                        btnTimer.disabled = false;
+                    }
+                    return;
+                }
+
+                // Vérifier que le wallet connecté correspond au wallet de l'étudiant
+                // Cette vérification est uniquement pour l'espace étudiant
+                if (account.toLowerCase() !== studentData.wallet.toLowerCase()) {
+                    const connectedWallet = account.substring(0,6) + "..." + account.substring(38);
+                    const studentWallet = studentData.wallet.substring(0,6) + "..." + studentData.wallet.substring(38);
+                    const fullStudentWallet = studentData.wallet;
+                    
+                    // Afficher un message d'erreur détaillé
+                    showNotification('warning', 'Wallet incorrect', 
+                        `Le wallet connecté (${connectedWallet}) ne correspond pas à votre wallet étudiant (${studentWallet}).`);
+                    
+                    // Afficher aussi un message dans la console et un alert pour plus de clarté
+                    setTimeout(() => {
+                        showCustomError(
+                            'Wallet MetaMask incorrect',
+                            `<div style="text-align: left;">
+                                <p><strong>Wallet connecté :</strong> ${connectedWallet}</p>
+                                <p><strong>Wallet attendu :</strong> ${fullStudentWallet}</p>
+                                <p style="margin-top: 15px;"><strong>Pour ajouter votre diplôme NFT :</strong></p>
+                                <ol style="text-align: left; padding-left: 20px; color: #94a3b8;">
+                                    <li>Cliquez sur l'icône MetaMask dans votre navigateur</li>
+                                    <li>Changez de compte ou créez un nouveau compte avec l'adresse : <code style="color: var(--accent);">${fullStudentWallet}</code></li>
+                                    <li>Revenez sur cette page et cliquez à nouveau sur "Ajouter à mon MetaMask"</li>
+                                </ol>
+                            </div>`
+                        );
+                    }, 500);
+                    
+                    if(btnTimer) { 
+                        btnTimer.innerHTML = "<i class='ri-fox-line'></i> Ajouter à mon MetaMask";
+                        btnTimer.disabled = false;
+                    }
+                    return;
+                }
+
+                // Récupérer le tokenId depuis le serveur
+                const response = await fetch(`${API_URL}/students`);
+                const allStudents = await response.json();
+                const found = allStudents.find(s => s.wallet && s.wallet.toLowerCase() === studentData.wallet.toLowerCase());
+                
+                if (!found || !found.ipfsLink) {
+                    showNotification('error', 'Aucun diplôme', 'Aucun diplôme trouvé pour cet étudiant.');
+                    if(btnTimer) { 
+                        btnTimer.innerHTML = "<i class='ri-fox-line'></i> Ajouter à mon MetaMask";
+                        btnTimer.disabled = false;
+                    }
+                    return;
+                }
+
+                // Récupérer le tokenId depuis la blockchain
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const contract = new ethers.Contract(APP_CONTRACT_ADDRESS, [
+                    "function students(uint256) view returns (uint256 id, string memory name, string memory course, string memory birthDate, uint256 grade, address wallet, bool isEnrolled, uint256 diplomaTokenId)"
+                ], provider);
+                
+                const studentOnChain = await contract.students(found.id);
+                const tokenId = studentOnChain.diplomaTokenId.toString();
+
+                if (tokenId === "0") {
+                    showNotification('error', 'Token introuvable', 'Aucun token NFT trouvé pour ce diplôme.');
+                    if(btnTimer) { 
+                        btnTimer.innerHTML = "<i class='ri-fox-line'></i> Ajouter à mon MetaMask";
+                        btnTimer.disabled = false;
+                    }
+                    return;
+                }
+
+                if(btnTimer) btnTimer.innerHTML = "<i class='ri-loader-4-line ri-spin'></i> Ajout en cours...";
+                
+                // Ajouter le NFT à MetaMask
+                await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: { 
+                        type: 'ERC721', 
+                        options: { 
+                            address: APP_CONTRACT_ADDRESS, 
+                            tokenId: tokenId, 
+                            symbol: "SDIP", 
+                            decimals: 0 
+                        } 
+                    },
+                });
+                
+                if(btnTimer) { 
+                    btnTimer.innerHTML = "✅ Ajouté à MetaMask !"; 
+                    btnTimer.style.background = "var(--success)";
+                    btnTimer.disabled = false;
+                }
+                showNotification('success', 'NFT ajouté', 'Votre diplôme a été ajouté à votre wallet MetaMask.');
+            } catch (error) { 
+                console.error('Erreur ajout NFT étudiant:', error);
+                if(btnTimer) { 
+                    btnTimer.innerHTML = "⚠️ Erreur/Annulé";
+                    btnTimer.disabled = false;
+                }
+                if (error.code === 4001) {
+                    showNotification('warning', 'Ajout annulé', 'Vous avez annulé l\'ajout du NFT.');
+                } else {
+                    showNotification('error', 'Erreur', 'Impossible d\'ajouter le NFT à MetaMask.');
+                }
             }
         }
     </script>

@@ -14,7 +14,6 @@ const artifact = require("../artifacts/contracts/StudentRegistry.sol/StudentRegi
 const app = express();
 app.use(cors());
 app.use(express.json());
-// Sert les fichiers du dossier 'client'
 app.use(express.static(path.join(__dirname, "../client")));
 const upload = multer({ dest: "uploads/" });
 
@@ -22,8 +21,8 @@ const upload = multer({ dest: "uploads/" });
 const provider = new ethers.JsonRpcProvider("https://polygon-amoy.infura.io/v3/" + process.env.INFURA_API_KEY);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
-// ⚠️ C'est la bonne adresse (Celle où tu écris)
-const CONTRACT_ADDRESS = "0x3E2Bf68F9BbD30A83ff3E06C88916592b294ea17"; 
+// ⚠️ Assure-toi que c'est la NOUVELLE adresse après déploiement
+const CONTRACT_ADDRESS = "0x7629CbFDD338E2BC4D4A984e95bd4ba2b89238d8"; 
 
 const contract = new ethers.Contract(CONTRACT_ADDRESS, artifact.abi, wallet);
 
@@ -46,54 +45,113 @@ const pinFileToIPFS = async (filePath) => {
 
 // --- ROUTES ---
 
-// 1. AJOUTER ETUDIANT + MINT
+// 1. AJOUTER ETUDIANT (sans mint)
 app.post("/add-student", upload.single('diploma'), async (req, res) => {
   try {
-    const { id, name, course, birthDate, grade, studentWallet } = req.body;
+    let { id, name, course, birthDate, grade, studentWallet } = req.body;
     const file = req.file;
 
-    if (!file || !studentWallet) return res.status(400).json({ error: "Données incomplètes" });
+    if (!file) return res.status(400).json({ error: "Données incomplètes (fichier manquant)" });
 
-    console.log(`Traitement : ${name} (ID: ${id})...`);
+    // Le wallet étudiant est maintenant obligatoire
+    if (!studentWallet || studentWallet.trim() === "") {
+        return res.status(400).json({ error: "L'adresse wallet de l'étudiant est obligatoire" });
+    }
+
+    // Vérifier le format de l'adresse
+    if (!studentWallet.startsWith('0x') || studentWallet.length !== 42) {
+        return res.status(400).json({ error: "Format d'adresse wallet invalide" });
+    }
+
+    console.log(`Inscription : ${name} (ID: ${id}) -> Wallet Étudiant: ${studentWallet}`);
 
     // 1. Upload IPFS
     const tokenURI = await pinFileToIPFS(file.path);
-    fs.unlinkSync(file.path); // Supprime le fichier temporaire
+    fs.unlinkSync(file.path); 
 
-    // 2. Blockchain : Inscription (addStudent)
-    // Attention: Si pas de gaz (POL), ça va planter ici
-    console.log("Envoi Transaction 1 (Inscription)...");
-    const tx1 = await contract.addStudent(id, name, course, birthDate, grade);
+    // 2. Blockchain : Inscription uniquement (sans mint)
+    console.log("Envoi Transaction (Inscription)...");
+    const tx1 = await contract.addStudent(id, name, course, birthDate, grade, studentWallet);
     await tx1.wait();
-    console.log("Tx 1 Confirmée.");
+    console.log("Tx Confirmée.");
 
-    // 3. Blockchain : Mint NFT (issueDiploma)
-    // ...
-    const tx2 = await contract.issueDiploma(id, studentWallet, tokenURI);
-    
-    // Le hash est disponible IMMÉDIATEMENT ici, avant même le wait()
-    console.log("Hash de la transaction :", tx2.hash); 
-
-    const receipt = await tx2.wait();
-    console.log("Tx 2 Confirmée.");
-    // ...
-
-    
-    // Pause de sécurité pour la propagation (2 secondes)
-    await new Promise(r => setTimeout(r, 2000));
-
-    // 4. Récupération de l'ID du Token créé
-    const studentData = await contract.students(id);
-    const newTokenId = studentData.diplomaTokenId.toString();
-
-    console.log(`Succès ! Token ID: ${newTokenId}`);
-
-    // On renvoie tout au Frontend
-    res.json({ success: true, txHash: tx2.hash, ipfsLink: tokenURI, tokenId: newTokenId });
+    res.json({ success: true, txHash: tx1.hash, ipfsLink: tokenURI, studentId: id });
 
   } catch (error) {
     console.error("ERREUR SERVEUR:", error);
-    // Si l'erreur contient "insufficient funds", on prévient l'utilisateur clairement
+    if (error.code === "INSUFFICIENT_FUNDS" || error.message.includes("insufficient funds")) {
+        return res.status(500).json({ error: "Le Serveur n'a plus de POL (Matic) pour payer le gaz !" });
+    }
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 1b. MINTER NFT pour un étudiant déjà inscrit (vers admin MetaMask + étudiant)
+app.post("/mint-diploma", async (req, res) => {
+  try {
+    const { studentId, ipfsLink, adminWallet, studentWallet } = req.body;
+
+    if (!studentId || !ipfsLink || !adminWallet || !studentWallet) {
+        return res.status(400).json({ error: "ID étudiant, IPFS link, adresse admin et adresse étudiant requis" });
+    }
+
+    // Récupérer les données de l'étudiant
+    const studentData = await contract.students(studentId);
+    
+    if (!studentData.isEnrolled) {
+        return res.status(400).json({ error: "Étudiant non inscrit" });
+    }
+
+    // Vérifier que les adresses sont valides
+    if (!adminWallet.startsWith('0x') || adminWallet.length !== 42) {
+        return res.status(400).json({ error: "Format d'adresse admin invalide" });
+    }
+    if (!studentWallet.startsWith('0x') || studentWallet.length !== 42) {
+        return res.status(400).json({ error: "Format d'adresse étudiant invalide" });
+    }
+
+    console.log(`Mint NFT pour étudiant ${studentId}`);
+    console.log(`  - Vers Admin MetaMask: ${adminWallet}`);
+    console.log(`  - Vers Étudiant: ${studentWallet}`);
+
+    // Mint NFT vers le wallet admin MetaMask
+    const tx1 = await contract.issueDiploma(studentId, adminWallet, ipfsLink);
+    console.log("Hash transaction Admin:", tx1.hash); 
+    const receipt1 = await tx1.wait();
+    console.log("Tx Admin Confirmée.");
+
+    // Récupération du tokenId pour l'admin
+    const studentDataAfterAdmin = await contract.students(studentId);
+    const adminTokenId = studentDataAfterAdmin.diplomaTokenId.toString();
+
+    // Pause entre les transactions
+    await new Promise(r => setTimeout(r, 3000));
+
+    // Mint NFT vers le wallet étudiant (créera un nouveau token avec un ID différent)
+    const tx2 = await contract.issueDiploma(studentId, studentWallet, ipfsLink);
+    console.log("Hash transaction Étudiant:", tx2.hash); 
+    const receipt2 = await tx2.wait();
+    console.log("Tx Étudiant Confirmée.");
+
+    // Récupération du tokenId pour l'étudiant
+    const studentDataAfterStudent = await contract.students(studentId);
+    const studentTokenId = studentDataAfterStudent.diplomaTokenId.toString();
+
+    console.log(`Succès ! Token Admin ID: ${adminTokenId}, Token Étudiant ID: ${studentTokenId}`);
+
+    res.json({ 
+        success: true, 
+        adminTxHash: tx1.hash,
+        studentTxHash: tx2.hash,
+        adminTokenId: adminTokenId, 
+        studentTokenId: studentTokenId,
+        adminWallet: adminWallet,
+        studentWallet: studentWallet,
+        message: "NFT minté vers les deux wallets avec succès."
+    });
+
+  } catch (error) {
+    console.error("ERREUR SERVEUR:", error);
     if (error.code === "INSUFFICIENT_FUNDS" || error.message.includes("insufficient funds")) {
         return res.status(500).json({ error: "Le Serveur n'a plus de POL (Matic) pour payer le gaz !" });
     }
@@ -121,7 +179,6 @@ app.get("/students", async (req, res) => {
     let studentsList = [];
 
     for (let i = 0; i < total; i++) {
-        // On met un try/catch dans la boucle pour éviter qu'un étudiant buggé ne casse toute la liste
         try {
             const studentId = await contract.studentIds(i); 
             const student = await contract.getStudent(studentId);
@@ -137,6 +194,7 @@ app.get("/students", async (req, res) => {
                     course: student.course,
                     birthDate: student.birthDate,
                     grade: student.grade.toString(),
+                    wallet: student.wallet, // On renvoie le wallet pour la vérification Frontend
                     ipfsLink: ipfsLink 
                 });
             }
