@@ -1,9 +1,7 @@
-name: Build and Push Docker Image - Student Registry V2
+name: Docker Build & Push - V2
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -15,23 +13,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Se connecter à Docker Hub avec les secrets
+      # --- ÉTAPE AJOUTÉE (Celle qui manquait !) ---
+      # Installe l'outil "Buildx" nécessaire pour construire l'image correctement
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 2. Se connecter à DockerHub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 3. Construire et Envoyer l'image (Push) avec nouveau nom
-      - name: Build and push
+      # 3. Construire et Pousser
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: mariam730/studentregistry-v2:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/student-registry-v2:latest
+          # On active le cache pour que ça aille plus vite les prochaines fois
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      # 4. Nettoyer les anciennes images (optionnel)
-      - name: Image digest
-        run: echo ${{ steps.build.outputs.digest }}
