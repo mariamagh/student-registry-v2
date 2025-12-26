@@ -35,3 +35,5 @@ jobs:
           # On active le cache pour que ça aille plus vite les prochaines fois
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          
+# Force refresh
