@@ -16,9 +16,9 @@ COPY . .
 # 6. On compile les contrats intelligents
 RUN npx hardhat compile
 
-# 7. On ouvre le port 3000 (celui de ton serveur)
-EXPOSE 3000
+# 7. On ouvre le port 3001 (celui de ton serveur)
+EXPOSE 3001
 
 # 8. La commande pour démarrer quand on ouvre la boîte
-CMD ["node", "server/server.js"]
+CMD ["sh", "-c", "if [ -f .env ]; then export $(cat .env | xargs); fi && node server/server.js"]
 

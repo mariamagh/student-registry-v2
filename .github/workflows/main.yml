@@ -18,14 +18,23 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 2. Se connecter à DockerHub
+      # 2. Créer le fichier .env avec les secrets GitHub
+      - name: Create .env file
+        run: |
+          echo "INFURA_API_KEY=${{ secrets.INFURA_API_KEY }}" >> .env
+          echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}" >> .env
+          echo "ADMIN_WALLET_ADDRESS=${{ secrets.ADMIN_WALLET_ADDRESS }}" >> .env
+          echo "PINATA_API_KEY=${{ secrets.PINATA_API_KEY }}" >> .env
+          echo "PINATA_SECRET_KEY=${{ secrets.PINATA_SECRET_KEY }}" >> .env
+
+      # 3. Se connecter à DockerHub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 3. Construire et Pousser
+      # 4. Construire et Pousser
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -35,5 +44,13 @@ jobs:
           # On active le cache pour que ça aille plus vite les prochaines fois
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          
+
+      # 5. Déployer sur le serveur (optionnel)
+      - name: Deploy to production
+        if: success()
+        run: |
+          echo "✅ Image Docker poussée avec succès!"
+          echo "🐳 Image: ${{ secrets.DOCKER_USERNAME }}/student-registry-v2:latest"
+          echo "🚀 Pour déployer: docker run -d -p 3001:3001 --env-file .env ${{ secrets.DOCKER_USERNAME }}/student-registry-v2:latest"
+
 # Force refresh

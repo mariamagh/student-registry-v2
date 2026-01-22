@@ -333,4 +333,4 @@ app.get("/students", async (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-app.listen(3000, () => { console.log("✅ Serveur prêt sur le port 3000"); });
+app.listen(3001, () => { console.log("✅ Serveur prêt sur le port 3001"); });
